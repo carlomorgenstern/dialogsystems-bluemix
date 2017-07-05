@@ -1,10 +1,6 @@
-# Conversation Sample Application [![Build Status](https://travis-ci.org/watson-developer-cloud/conversation-simple.svg?branch=master)](http://travis-ci.org/watson-developer-cloud/conversation-simple) [![codecov.io](https://codecov.io/github/watson-developer-cloud/conversation-simple/coverage.svg?branch=master)](https://codecov.io/github/watson-developer-cloud/conversation-simple?branch=master)
+# Conversation Sample Application
 
-This Node.js app demonstrates the Conversation service in a simple chat interface simulating a cognitive car dashboard.
-
-![Demo](readme_images/demo.gif)
-
-You can view a [demo][demo_url] of this app.
+This Node.js app demonstrates how a dialogsystem on Bluemix could look like. It is forked and extended from [here.](https://github.com/watson-developer-cloud/conversation-simple)
 
 ## Before you begin
 
@@ -46,8 +42,6 @@ You can use an exisiting instance of the Conversation service. Otherwise, follow
 1. In your browser, navigate to [your Bluemix console] (https://console.ng.bluemix.net/dashboard/services).
 
 1. From the **All Items** tab, click the newly created Conversation service in the **Services** list.
-
-    ![Screen capture of Services list](readme_images/conversation_service.png)
 
 1. On the Service Details page, click **Launch tool**.
 
@@ -94,9 +88,7 @@ You can use an exisiting instance of the Conversation service. Otherwise, follow
 
 1. Click the menu icon in the upper-right corner of the workspace tile, and then select **View details**.
 
-    ![Screen capture of workspace tile menu](readme_images/workspace_details.png)
-
-1. Click the ![Copy](readme_images/copy_icon.png) icon to copy the workspace ID to the clipboard.
+1. Click the Copy icon to copy the workspace ID to the clipboard.
 
 1. On the local system, paste the workspace ID into the WORKSPACE_ID variable in the `.env` file. Save and close the file.
 
@@ -199,10 +191,6 @@ cf logs <application-name> --recent
 This sample code is licensed under Apache 2.0.
 Full license text is available in [LICENSE](LICENSE).
 
-## Contributing
-
-See [CONTRIBUTING](CONTRIBUTING.md).
-
 ## Open Source @ IBM
 
 Find more open source projects on the
@@ -211,7 +199,6 @@ Find more open source projects on the
 
 [cf_docs]: (https://www.ibm.com/watson/developercloud/doc/common/getting-started-cf.html)
 [cloud_foundry]: https://github.com/cloudfoundry/cli#downloads
-[demo_url]: http://conversation-simple.mybluemix.net/
 [doc_intents]: (http://www.ibm.com/watson/developercloud/doc/conversation/intent_ovw.shtml)
 [docs]: http://www.ibm.com/watson/developercloud/doc/conversation/overview.shtml
 [docs_landing]: (http://www.ibm.com/watson/developercloud/doc/conversation/index.shtml)

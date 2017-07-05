@@ -1,15 +1,15 @@
 ---
 declared-services:
-  my-conversation-service:
+  dialogsystems-conversation:
     label: conversation
     plan: free
 applications:
-- name: conversation-simple
+- name: dialogsysteme-bluemix
   command: npm start
   path: .
   memory: 256M
   instances: 1
   services:
-  - my-conversation-service
+  - dialogsystems-conversation
   env:
     NPM_CONFIG_PRODUCTION: false

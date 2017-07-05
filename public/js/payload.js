@@ -66,7 +66,7 @@ var PayloadPanel = (function() {
       // Create new payload DOM element
       var payloadDiv = buildPayloadDomElement(isRequest);
       var payloadElement = document.querySelector(isRequest
-              ? settings.selectors.payloadRequest : settings.selectors.payloadResponse);
+        ? settings.selectors.payloadRequest : settings.selectors.payloadResponse);
       // Clear out payload holder element
       while (payloadElement.lastChild) {
         payloadElement.removeChild(payloadElement.lastChild);
@@ -97,7 +97,7 @@ var PayloadPanel = (function() {
   // Constructs new DOM element to use in displaying the payload
   function buildPayloadDomElement(isRequest) {
     var payloadPrettyString = jsonPrettyPrint(isRequest
-            ? Api.getRequestPayload() : Api.getResponsePayload());
+      ? Api.getRequestPayload() : Api.getResponsePayload());
 
     var payloadJson = {
       'tagName': 'div',
