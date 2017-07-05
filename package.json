@@ -1,7 +1,7 @@
 {
   "name": "dialogsystems-bluemix",
   "description": "A simple Node.js based web app which shows how a dialogsystem on bluemix could look like.",
-  "version": "0.1",
+  "version": "0.1.0",
   "main": "server.js",
   "private": true,
   "scripts": {
