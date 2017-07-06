@@ -8,12 +8,14 @@ var PayloadPanel = (function() {
     selectors: {
       payloadColumn: '#payload-column',
       payloadInitial: '#payload-initial-message',
+      payloadStt: '#payload-stt',
       payloadRequest: '#payload-request',
       payloadResponse: '#payload-response'
     },
     payloadTypes: {
-      request: 'request',
-      response: 'response'
+      request: 1,
+      response: 2,
+      stt: 3
     }
   };
 
@@ -57,16 +59,33 @@ var PayloadPanel = (function() {
       currentResponsePayloadSetter.call(Api, newPayload);
       displayPayload(settings.payloadTypes.response);
     };
+
+    var currentSttPayloadSetter = Api.setSttPayload;
+    Api.setSttPayload = function(newPayload) {
+      currentSttPayloadSetter.call(Api, newPayload);
+      displayPayload(settings.payloadTypes.stt);
+    };
   }
 
   // Display a request or response payload that has just been sent/received
   function displayPayload(typeValue) {
-    var isRequest = checkRequestType(typeValue);
-    if (isRequest !== null) {
+    if (typeValue !== settings.payloadTypes.request) {
       // Create new payload DOM element
-      var payloadDiv = buildPayloadDomElement(isRequest);
-      var payloadElement = document.querySelector(isRequest
-        ? settings.selectors.payloadRequest : settings.selectors.payloadResponse);
+      var payloadDiv = buildPayloadDomElement(typeValue);
+
+      var payloadElement = null;
+      switch(typeValue) {
+      case settings.payloadTypes.request:
+        payloadElement = document.querySelector(settings.selectors.payloadRequest);
+        break;
+      case settings.payloadTypes.response:
+        payloadElement = document.querySelector(settings.selectors.payloadResponse);
+        break;
+      case settings.payloadTypes.stt:
+        payloadElement = document.querySelector(settings.selectors.payloadStt);
+        break;
+      }
+      
       // Clear out payload holder element
       while (payloadElement.lastChild) {
         payloadElement.removeChild(payloadElement.lastChild);
@@ -82,29 +101,34 @@ var PayloadPanel = (function() {
     }
   }
 
-  // Checks if the given typeValue matches with the request "name", the response "name", or neither
-  // Returns true if request, false if response, and null if neither
-  // Used to keep track of what type of payload we're currently working with
-  function checkRequestType(typeValue) {
-    if (typeValue === settings.payloadTypes.request) {
-      return true;
-    } else if (typeValue === settings.payloadTypes.response) {
-      return false;
-    }
-    return null;
-  }
-
   // Constructs new DOM element to use in displaying the payload
-  function buildPayloadDomElement(isRequest) {
-    var payloadPrettyString = jsonPrettyPrint(isRequest
-      ? Api.getRequestPayload() : Api.getResponsePayload());
+  function buildPayloadDomElement(typeValue) {
+    var headerText = '';
+    var payload = null;
+    switch(typeValue) {
+    case settings.payloadTypes.request:
+      headerText = 'User input';
+      payload = Api.getRequestPayload();
+      break;
+    case settings.payloadTypes.response:
+      headerText = 'Watson understands';
+      payload = Api.getResponsePayload();
+      delete payload.context.system._node_output_map;
+      break;
+    case settings.payloadTypes.stt:
+      headerText = 'Speech to Text';
+      payload = Api.getSttPayload();
+      break;
+    }
+
+    var payloadPrettyString = jsonPrettyPrint(payload);
 
     var payloadJson = {
       'tagName': 'div',
       'children': [{
         // <div class='header-text'>
         'tagName': 'div',
-        'text': isRequest ? 'User input' : 'Watson understands',
+        'text': headerText,
         'classNames': ['header-text']
       }, {
         // <div class='code-line responsive-columns-wrapper'>

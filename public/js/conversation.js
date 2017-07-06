@@ -26,9 +26,10 @@ var ConversationPanel = (function() {
   // Initialize the module
   function init() {
     chatUpdateSetup();
-    Api.sendRequest( '', null );
+    Api.sendRequest('', null, 'message');
     setupInputBox();
   }
+
   // Set up callbacks on payload setters in Api module
   // This causes the displayMessage function to be called when messages are sent / received
   function chatUpdateSetup() {
@@ -42,6 +43,15 @@ var ConversationPanel = (function() {
     Api.setResponsePayload = function(newPayloadStr) {
       currentResponsePayloadSetter.call(Api, newPayloadStr);
       displayMessage(JSON.parse(newPayloadStr), settings.authorTypes.watson);
+    };
+
+    var currentSttPayloadSetter = Api.setSttPayload;
+    Api.setSttPayload = function(newPayloadStr) {
+      currentSttPayloadSetter.call(Api, newPayloadStr);
+      
+      var textInput = document.getElementById('textInput');
+      textInput.value = JSON.parse(newPayloadStr).results[0].alternatives[0].transcript;
+      inputKeyDown({keyCode:13}, textInput);
     };
   }
 
@@ -218,7 +228,7 @@ var ConversationPanel = (function() {
       }
 
       // Send the user message
-      Api.sendRequest(inputBox.value, context);
+      Api.sendRequest(inputBox.value, context, 'message');
 
       // Clear input box for further messages
       inputBox.value = '';

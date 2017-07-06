@@ -230,11 +230,36 @@ input:-moz-placeholder {
   display: none;
 }
 
+.inputContainer {
+  display: flex;
+}
+
 .inputOutline {
-  display: block;
+  display: inline-block;
   border-bottom: 0.0625rem solid #aeaeae;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+  flex: 1;
+}
+
+.speechButton {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  font-weight: normal;
+  border-radius: 0;
+  font-size: 25px;
+}
+
+.purple {
+  color: #9855D4;
+}
+
+.speechButton:hover, .speechButton:focus, .speechButton:active {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  outline: 0;
 }
 
 #textInputDummy {
@@ -429,3 +454,27 @@ html{
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot') format('eot'),
+  url('../fonts/glyphicons-halflings-regular.svg') format('svg'),
+  url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+  url('../fonts/glyphicons-halflings-regular.woff') format('woff'),
+  url('../fonts/glyphicons-halflings-regular.woff2') format('woff2');
+}
+
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.glyphicon-volume-off:before { content: "\e036"; }
+.glyphicon-volume-up:before { content: "\e038"; }
