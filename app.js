@@ -18,7 +18,11 @@
 
 var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
-var Conversation = require('watson-developer-cloud/conversation/v1'); // watson sdk
+var multer = require('multer')({ dest: 'uploads/' }); // parser for multipart/form-data requests
+var fs = require('fs');
+var Conversation = require('watson-developer-cloud/conversation/v1'); // conversation service
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1'); // speech to text service
+var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1'); // text to speech service
 
 var app = express();
 
@@ -31,9 +35,39 @@ var conversation = new Conversation({
   // If unspecified here, the CONVERSATION_USERNAME and CONVERSATION_PASSWORD env properties will be checked
   // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
   // username: '<username>',
-  // password: '<password>',
-  // url: 'https://gateway.watsonplatform.net/conversation/api',
+  // password: '<password>'
   version_date: Conversation.VERSION_DATE_2017_04_21
+});
+
+var speechToText = new SpeechToTextV1({
+  // If unspecified here, the SPEECH_TO_TEXT_USERNAME and SPEECH_TO_TEXT_PASSWORD env properties will be checked
+  // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
+  // username: '<username>',
+  // password: '<password>'
+});
+
+var textToSpeech = new TextToSpeechV1({
+  // If unspecified here, the TEXT_TO_SPEECH_USERNAME and TEXT_TO_SPEECH_PASSWORD env properties will be checked
+  // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
+  // username: '<username>',
+  // password: '<password>'
+});
+
+// Endpoint for speech to text
+app.post('/api/speechin', multer.single('speech'), function(req, res) {
+  var params = {
+    // From file
+    audio: fs.createReadStream(req.file.path),
+    content_type: 'audio/webm;codecs=opus'
+  };
+
+  speechToText.recognize(params, function(err, response) {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      res.send(response);
+    }
+  });
 });
 
 // Endpoint to be call from the client side
@@ -59,6 +93,18 @@ app.post('/api/message', function(req, res) {
     }
     return res.json(updateMessage(payload, data));
   });
+});
+
+app.post('/api/speechout', function(req, res) {
+  var params = {
+    text: req.body.input.text,
+    voice: 'en-US_MichaelVoice', // Optional voice
+    accept: 'audio/ogg;codecs=opus'
+  };
+
+  res.attachment('transcript.ogg');
+  // Pipe the synthesized text to a file
+  textToSpeech.synthesize(params).pipe(res);
 });
 
 /**
