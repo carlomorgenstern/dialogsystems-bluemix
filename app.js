@@ -58,7 +58,9 @@ app.post('/api/speechin', multer.single('speech'), function(req, res) {
   var params = {
     // From file
     audio: fs.createReadStream(req.file.path),
-    content_type: 'audio/webm;codecs=opus'
+    content_type: 'audio/webm;codecs=opus',
+    max_alternatives: 3,
+    word_confidence: true
   };
 
   speechToText.recognize(params, function(err, response) {
