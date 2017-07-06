@@ -279,8 +279,8 @@ input:-moz-placeholder {
   color: #fff;
   overflow-x: auto;
 
-  width: 45%;
-  max-width: 32.0625rem;
+  width: 50%;
+  max-width: 40em;
   min-width: 29.6875rem;
 }
 
