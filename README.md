@@ -1,6 +1,6 @@
 # Conversation Sample Application
 
-This Node.js app demonstrates how a dialogsystem on Bluemix could look like. It is forked and extended from [here.](https://github.com/watson-developer-cloud/conversation-simple)
+This Node.js app demonstrates how a dialog system on Bluemix could look like. It is forked and extended from [here.](https://github.com/watson-developer-cloud/conversation-simple)
 
 ## Before you begin
 
