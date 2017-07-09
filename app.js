@@ -19,7 +19,7 @@
 var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
 var multer = require('multer')({ dest: 'uploads/' }); // parser for multipart/form-data requests
-var fs = require('fs');
+var fs = require('fs'); // filesystem api
 var Conversation = require('watson-developer-cloud/conversation/v1'); // conversation service
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1'); // speech to text service
 var TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1'); // text to speech service
@@ -58,12 +58,13 @@ app.post('/api/speechin', multer.single('speech'), function(req, res) {
   var params = {
     // From file
     audio: fs.createReadStream(req.file.path),
-    content_type: 'audio/webm;codecs=opus',
+    content_type: req.file.mimetype,
     max_alternatives: 3,
     word_confidence: true
   };
 
   speechToText.recognize(params, function(err, response) {
+    fs.unlink(req.file.path);
     if (err) {
       res.status(500).json(err);
     } else {

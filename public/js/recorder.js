@@ -1,26 +1,43 @@
-const recordButton = document.getElementById('recordToggle');
-const constraints = { audio: true };
+var recordButton = document.getElementById('recordToggle');
+var constraints = { audio: true };
 
-let shouldRecord = false;
+var shouldRecord = false;
 var mediaRecorder = null;
+var recordedMimeType = null;
 
-recordButton.addEventListener('click', function() {
-  shouldRecord = !shouldRecord;
-  if (shouldRecord) {
-    navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess);
-    recordButton.classList.add('purple');
-  } else if (mediaRecorder) {
-    mediaRecorder.stop();
-    recordButton.classList.remove('purple');
+if (navigator.mediaDevices && MediaRecorder) {
+  if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+    recordedMimeType = 'audio/webm;codecs=opus';
+  } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+    recordedMimeType = 'audio/ogg;codecs=opus';
   }
-});
+}
+
+if (recordedMimeType === null) {
+  recordButton.style.visibility = 'hidden';
+} else {
+  recordButton.addEventListener('click', function() {
+    shouldRecord = !shouldRecord;
+    if (shouldRecord) {
+      navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess);
+      recordButton.classList.add('purple');
+    } else if (mediaRecorder) {
+      mediaRecorder.stop();
+      recordButton.classList.remove('purple');
+    }
+  });
+}
 
 function handleSuccess(stream) {
-  let chunks = [];
-  mediaRecorder = new MediaRecorder(stream);
+  var chunks = [];
+  mediaRecorder = new MediaRecorder(stream, {mimeType: recordedMimeType});
 
-  mediaRecorder.addEventListener('stop', function(e) {
-    Api.sendBlobRequest(new Blob(chunks, { 'type' : 'audio/webm;codecs=opus' }));
+  mediaRecorder.addEventListener('stop', function() {
+    Api.sendBlobRequest(new Blob(chunks, { 'type' : recordedMimeType }));
+
+    for (var track of stream.getTracks()) {
+      track.stop();
+    }
   });
 
   mediaRecorder.addEventListener('dataavailable', function(e) {
